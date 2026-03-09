@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { useHorseStore } from '@/stores/horses.ts'
+import { useHorseStore } from '@/stores/horsesStore.ts'
 
 const horseStore = useHorseStore()
 const { horseList } = horseStore

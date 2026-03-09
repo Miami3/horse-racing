@@ -1,10 +1,18 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button'
-import { useHorseStore } from '@/stores/horses.ts'
-const horseStore = useHorseStore()
+import { Spinner } from '@/components/ui/spinner'
+import { useHorseStore } from '@/stores/horsesStore.ts'
+import { ref } from 'vue'
 
-const generateProgram = () => {
-  horseStore.selectHorses(20);
+const horseStore = useHorseStore()
+const round = ref(0)
+const running = ref(false)
+
+const startRound = async () => {
+  running.value = true
+  await horseStore.startRound(round.value)
+  round.value++
+  running.value = false
 }
 </script>
 
@@ -13,11 +21,15 @@ const generateProgram = () => {
     class="header flex justify-between items-center p-3 bg-linear-to-r from-blue-500 to-purple-500"
   >
     <h1 class="text-2xl font-bold text-white m-0">Horse Racing</h1>
-    <div class="header__controls">
-      <Button class="mr-2" @click="generateProgram" :disabled="horseStore.selected">
+    <div class="header__controls flex">
+      <Button class="mr-2" @click="horseStore.selectHorses()" v-if="!horseStore.selected">
         Generate Program
       </Button>
-      <Button>Start | Pause</Button>
+      <Button v-else @click="horseStore.resetHorses()" class="mr-2">Reset</Button>
+      <Button v-if="horseStore.selected" class="mr-2" @click="startRound" :disabled="running">
+        <Spinner v-if="running" />
+        Start Round {{ round + 1 }}
+      </Button>
     </div>
   </header>
 </template>

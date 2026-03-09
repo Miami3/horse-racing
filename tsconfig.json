@@ -12,6 +12,7 @@
     }
   ],
   "compilerOptions": {
+    "lib": ["ESNext.Array"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
