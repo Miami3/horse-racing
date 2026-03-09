@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { storeToRefs } from 'pinia'
 import {
   Table,
   TableBody,
@@ -10,7 +11,7 @@ import {
 import { useHorseStore } from '@/stores/horsesStore.ts'
 
 const horseStore = useHorseStore()
-const rounds = horseStore.rounds
+const { rounds } = storeToRefs(horseStore)
 </script>
 
 <template>

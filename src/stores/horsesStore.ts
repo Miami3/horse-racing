@@ -33,7 +33,7 @@ export const useHorseStore = defineStore('horses', {
     })),
   }),
   getters: {
-    getHorseList: (state) => shuffle(state.horseList).slice(0, state.horseList.length),
+    getHorseList: (state) => state.horseList,
     getCurrentRound: (state) => state.currentRound + 1,
     getCurrentRoundInfo: (state) => {
       const round = state.rounds[state.currentRound]
@@ -75,7 +75,7 @@ export const useHorseStore = defineStore('horses', {
         setTimeout(() => {
           this.roundResults()
           resolve()
-        }, 3000)
+        }, 5000)
       })
     },
     roundResults() {
@@ -86,18 +86,6 @@ export const useHorseStore = defineStore('horses', {
       )
       round.isFinished = true
       this.currentRound++
-    },
-    resetHorses() {
-      this.horseList = []
-      this.selected = false
-      this.currentRound = 0
-      this.rounds = roundsDistance.map((distance: number) => ({
-        distance,
-        participants: [],
-        results: [],
-        isStarted: false,
-        isFinished: false,
-      }))
-    },
+    }
   },
 })

@@ -19,7 +19,7 @@ const startRound = async () => {
       <Button class="mr-2" @click="horseStore.selectHorses()" v-if="!horseStore.selected">
         Generate Program
       </Button>
-      <Button v-else @click="horseStore.resetHorses()" class="mr-2">Reset</Button>
+      <Button v-else @click="horseStore.$reset()" class="mr-2">Reset</Button>
       <Button
         v-if="horseStore.selected && horseStore.getCurrentRound < 7"
         class="mr-2"
