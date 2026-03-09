@@ -5,13 +5,11 @@ import { useHorseStore } from '@/stores/horsesStore.ts'
 import { ref } from 'vue'
 
 const horseStore = useHorseStore()
-const round = ref(0)
 const running = ref(false)
 
 const startRound = async () => {
   running.value = true
-  await horseStore.startRound(round.value)
-  round.value++
+  await horseStore.startRound()
   running.value = false
 }
 </script>
@@ -25,10 +23,10 @@ const startRound = async () => {
       <Button class="mr-2" @click="horseStore.selectHorses()" v-if="!horseStore.selected">
         Generate Program
       </Button>
-      <Button v-else @click="horseStore.resetHorses()" class="mr-2">Reset</Button>
+      <Button v-else @click="horseStore.$reset()" class="mr-2">Reset</Button>
       <Button v-if="horseStore.selected" class="mr-2" @click="startRound" :disabled="running">
         <Spinner v-if="running" />
-        Start Round {{ round + 1 }}
+        Start Round {{ horseStore.getCurrentRound }}
       </Button>
     </div>
   </header>

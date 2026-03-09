@@ -12,7 +12,6 @@ import HorseDashboard from '@/components/HorseDashboard.vue'
     <HorseRacing class="col-span-3" />
     <HorseDashboard class="col-span-2" />
   </main>
-  <footer>footer</footer>
 </template>
 
 <style scoped></style>

@@ -1,10 +1,11 @@
 import { defineStore } from 'pinia'
 import { shuffle } from 'lodash'
-import { Horse } from '@/utils/Horse.ts'
+import { Horse } from '@/utils/Horse'
 
 interface HorseState {
   horseList: Horse[]
   rounds: Round[]
+  currentRound: number
   selected: boolean
 }
 
@@ -21,6 +22,7 @@ export const useHorseStore = defineStore('horses', {
   state: (): HorseState => ({
     horseList: [],
     selected: false,
+    currentRound: 0,
     rounds: roundsDistance.map((distance: number) => ({
       distance,
       participants: [],
@@ -30,6 +32,17 @@ export const useHorseStore = defineStore('horses', {
   }),
   getters: {
     getHorseList: (state) => shuffle(state.horseList).slice(0, state.horseList.length),
+    getCurrentRound: (state) => state.currentRound + 1,
+    getCurrentParticipants: (state) => {
+      const round = state.rounds[state.currentRound]
+      if (!round) return []
+      return round.participants
+    },
+    getCurrentDistance: (state) => {
+      const round = state.rounds[state.currentRound]
+      if (!round) return 0
+      return round.distance
+    },
   },
   actions: {
     selectHorses(num: number = 20) {
@@ -42,18 +55,22 @@ export const useHorseStore = defineStore('horses', {
       })
       this.selected = true
     },
-    startRound(roundIndex: number) {
+    startRound() {
       return new Promise<void>((resolve) => {
         setTimeout(() => {
-          this.roundResults(roundIndex)
+          this.roundResults()
           resolve()
         }, 5000)
       })
     },
-    roundResults(roundIndex: number) {
-      if (roundIndex < 0 || roundIndex >= this.rounds.length || !this.rounds[roundIndex]) return
-      this.rounds[roundIndex].results = shuffle(this.rounds[roundIndex].participants).sort((a, b) => (b.getCondition() - a.getCondition()))
-      this.rounds[roundIndex].isFinished = true
+    roundResults() {
+      const round = this.rounds[this.currentRound]
+      if (this.currentRound > this.rounds.length - 1 || !round) return
+      round.results = shuffle(round.participants).sort(
+        (a, b) => b.getCondition() - a.getCondition(),
+      )
+      round.isFinished = true
+      this.currentRound++
     },
     resetHorses() {
       this.horseList = []
