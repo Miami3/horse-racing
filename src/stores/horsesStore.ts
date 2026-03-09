@@ -14,6 +14,7 @@ interface Round {
   results: Horse[]
   participants: Horse[]
   isFinished: boolean
+  isStarted: boolean
 }
 
 const roundsDistance = [1200, 1400, 1600, 1800, 2000, 2200]
@@ -27,12 +28,23 @@ export const useHorseStore = defineStore('horses', {
       distance,
       participants: [],
       results: [],
+      isStarted: false,
       isFinished: false,
     })),
   }),
   getters: {
     getHorseList: (state) => shuffle(state.horseList).slice(0, state.horseList.length),
     getCurrentRound: (state) => state.currentRound + 1,
+    getCurrentRoundInfo: (state) => {
+      const round = state.rounds[state.currentRound]
+      if (!round) return {}
+      return round
+    },
+    getCurrentRoundIsStarted: (state) => {
+      const round = state.rounds[state.currentRound]
+      if (!round) return false
+      return round.isStarted
+    },
     getCurrentParticipants: (state) => {
       const round = state.rounds[state.currentRound]
       if (!round) return []
@@ -56,6 +68,9 @@ export const useHorseStore = defineStore('horses', {
       this.selected = true
     },
     startRound() {
+      const round = this.rounds[this.currentRound]
+      if (this.currentRound > this.rounds.length - 1 || !round) return
+      round.isStarted = true
       return new Promise<void>((resolve) => {
         setTimeout(() => {
           this.roundResults()
@@ -79,6 +94,7 @@ export const useHorseStore = defineStore('horses', {
         distance,
         participants: [],
         results: [],
+        isStarted: false,
         isFinished: false,
       }))
     },

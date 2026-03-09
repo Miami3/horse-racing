@@ -3,16 +3,15 @@ import HorseIcon from '@/components/HorseIcon.vue'
 import { useHorseStore } from '@/stores/horsesStore.ts'
 
 const horseStore = useHorseStore()
-
 const getAnimationDuration = (condition: number) => {
-  return `${90 * (1/condition) + 1}s`
+  return `${90 * (1 / condition) + 2}s`
 }
 </script>
 
 <template>
   <div class="horse__racing px-2">
     <h2 class="text-lg font-bold mb-2 text-center">Horse Racing</h2>
-    <div class="race">
+    <div v-if="horseStore.getCurrentParticipants.length > 0" class="race">
       <div
         class="mb-2 border-dashed border border-black flex h-12 relative"
         v-for="(horse, index) in horseStore.getCurrentParticipants"
@@ -27,13 +26,16 @@ const getAnimationDuration = (condition: number) => {
             :color="horse.getColor()"
             :style="{
               animationDuration: `${getAnimationDuration(horse.getCondition())}`,
+              animationPlayState: horseStore.getCurrentRoundIsStarted ? 'running' : 'paused',
             }"
           />
+          <div class="finish__line"></div>
         </div>
       </div>
+      <p class="text-red-500 text-right text-xl">Finish</p>
     </div>
 
-    <div v-if="horseStore.selected" class="round__info">
+    <div v-if="horseStore.selected && horseStore.getCurrentRound < 7" class="round__info">
       <p class="text-lg font-bold text-center">
         Lap #{{ horseStore.getCurrentRound }} - {{ horseStore.getCurrentDistance }}m
       </p>
@@ -48,12 +50,22 @@ const getAnimationDuration = (condition: number) => {
   animation: run linear forwards;
   animation-iteration-count: 1;
 }
+.finish__line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 40px;
+  width: 2px;
+  background-color: red;
+}
 @keyframes run {
   from {
+    left: 0;
     transform: translateX(0);
   }
   to {
-    transform: translateX(100%);
+    left: 100%;
+    transform: translateX(-115%);
   }
 }
 </style>

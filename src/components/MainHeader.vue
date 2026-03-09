@@ -2,15 +2,11 @@
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { useHorseStore } from '@/stores/horsesStore.ts'
-import { ref } from 'vue'
 
 const horseStore = useHorseStore()
-const running = ref(false)
 
 const startRound = async () => {
-  running.value = true
   await horseStore.startRound()
-  running.value = false
 }
 </script>
 
@@ -24,8 +20,13 @@ const startRound = async () => {
         Generate Program
       </Button>
       <Button v-else @click="horseStore.$reset()" class="mr-2">Reset</Button>
-      <Button v-if="horseStore.selected" class="mr-2" @click="startRound" :disabled="running">
-        <Spinner v-if="running" />
+      <Button
+        v-if="horseStore.selected && horseStore.getCurrentRound < 7"
+        class="mr-2"
+        @click="startRound"
+        :disabled="horseStore.getCurrentRoundIsStarted"
+      >
+        <Spinner v-if="horseStore.getCurrentRoundIsStarted" />
         Start Round {{ horseStore.getCurrentRound }}
       </Button>
     </div>
