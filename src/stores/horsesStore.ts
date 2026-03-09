@@ -81,7 +81,7 @@ export const useHorseStore = defineStore('horses', {
     roundResults() {
       const round = this.rounds[this.currentRound]
       if (this.currentRound > this.rounds.length - 1 || !round) return
-      round.results = shuffle(round.participants).sort(
+      round.results = [...round.participants].sort(
         (a, b) => b.getCondition() - a.getCondition(),
       )
       round.isFinished = true
@@ -90,6 +90,7 @@ export const useHorseStore = defineStore('horses', {
     resetHorses() {
       this.horseList = []
       this.selected = false
+      this.currentRound = 0
       this.rounds = roundsDistance.map((distance: number) => ({
         distance,
         participants: [],

@@ -15,7 +15,7 @@ const getAnimationDuration = (condition: number) => {
       <div
         class="mb-2 border-dashed border border-black flex h-12 relative"
         v-for="(horse, index) in horseStore.getCurrentParticipants"
-        :key="horse.id"
+        :key="horse.id + Date.now()"
       >
         <div class="horse__number w-10 h-12 flex items-center justify-center bg-green-200">
           {{ index + 1 }}
