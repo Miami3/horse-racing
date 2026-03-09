@@ -75,7 +75,7 @@ export const useHorseStore = defineStore('horses', {
         setTimeout(() => {
           this.roundResults()
           resolve()
-        }, 5000)
+        }, 3000)
       })
     },
     roundResults() {
